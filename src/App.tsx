@@ -236,14 +236,14 @@ function buildAIPrompt(data: FormData): string {
   if (data.problemSolved)
     optionalLines.push(`The project solved this problem for them: ${data.problemSolved}.`)
 
-  return `Write a Google review for a custom woodworking business.
+  return `Write a Google review for a Cache Custom, a custom woodworking studio in Logan, Utah. Only write the content of the review, not the rating itself.
 Client's project description: ${data.projectType}.
 They rated overall satisfaction as ${data.overallQuality}/5.
 They loved: ${data.loveMost || 'the finished piece'}.
 Their biggest concern was: ${data.biggestConcern || 'not specified'}.
 What stood out about their service: ${data.experienceStandout || 'the overall experience'}.
 ${optionalLines.join('\n')}
-Tone: Authentic, specific, and not overly salesy.`
+Tone: Authentic, specific, and not overly salesy. Stay true to the client's voice and experience.`
 }
 
 export default function App() {
@@ -255,6 +255,35 @@ export default function App() {
 
   const set = <K extends keyof FormData>(key: K, value: FormData[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const fillSampleData = () => {
+    setForm({
+      name: 'John Smith',
+      email: 'john.smith@example.com',
+      projectType: 'dining table',
+      completionDate: '2026-02-15',
+      overallQuality: 5,
+      craftsmanship: 5,
+      metExpectations: 5,
+      durabilityFunctionality: 5,
+      aesthetics: 5,
+      loveMost: 'The attention to detail and beautiful wood grain. The custom design fits perfectly in our dining room.',
+      wouldChange: 'Nothing at all - it exceeded our expectations!',
+      communicationClarity: 5,
+      understoodVision: 5,
+      designCollaboration: 5,
+      updatesTransparency: 5,
+      timelineManagement: 4,
+      experienceStandout: 'The team was incredibly professional and took time to understand exactly what we wanted. They provided regular updates with photos throughout the process.',
+      valueForInvestment: 5,
+      professionalExperience: 5,
+      npsScore: 10,
+      howItMakesYouFeel: 'Proud and excited every time we have guests over. It\'s become the centerpiece of our home.',
+      changedRoomUse: 'We now host dinner parties much more often because we have such a beautiful space to gather around.',
+      problemSolved: 'We needed a table that could accommodate our large family while also fitting the unique dimensions of our dining room.',
+      biggestConcern: 'I was worried about the timeline and whether the final product would match my vision, but both concerns were completely resolved.',
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -373,6 +402,17 @@ export default function App() {
             <br />
             We'd love to hear about your experience.
           </p>
+        </div>
+
+        {/* Sample Data Button */}
+        <div className="flex justify-center mb-6">
+          <button
+            type="button"
+            onClick={fillSampleData}
+            className="text-sm text-amber-600 hover:text-amber-700 font-medium underline focus:outline-none"
+          >
+            Fill with Sample Data
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
@@ -572,9 +612,31 @@ export default function App() {
           <div className="flex justify-center mb-10">
             <button
               type="submit"
-              className="bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-semibold py-3 px-12 rounded-xl text-base transition-colors shadow-sm"
+              disabled={loading}
+              className={`font-semibold py-3 px-12 rounded-xl text-base transition-colors shadow-sm flex items-center gap-2 ${
+                loading
+                  ? 'bg-gray-400 cursor-not-allowed text-white'
+                  : 'bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white'
+              }`}
             >
-              Submit
+              {loading && (
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              )}
+              {loading ? 'Submitting...' : 'Submit'}
             </button>
           </div>
         </form>
