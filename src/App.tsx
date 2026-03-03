@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import OpenAI from 'openai'
 
 interface FormData {
   // Section 1
@@ -291,25 +290,26 @@ export default function App() {
     setLoading(true)
     setError('')
 
-    const apiKey = import.meta.env.VITE_OPENAI_API_KEY as string | undefined
-    if (!apiKey) {
-      setError('OpenAI API key not configured. Set VITE_OPENAI_API_KEY in your .env file.')
-      setLoading(false)
-      setSubmitted(true)
-      return
-    }
-
     try {
-      const client = new OpenAI({ apiKey, dangerouslyAllowBrowser: true })
       const prompt = buildAIPrompt(form)
-      const response = await client.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 300,
+      
+      // Call the Vercel serverless function
+      const response = await fetch('/api/generate-review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
       })
-      setAiReview(response.choices[0]?.message?.content ?? '')
+
+      if (!response.ok) {
+        throw new Error('Failed to generate review')
+      }
+
+      const data = await response.json()
+      setAiReview(data.review)
     } catch (err) {
-      setError('Failed to generate AI review. Please check your API key and try again.')
+      setError('Failed to generate AI review. Please try again.')
     } finally {
       setLoading(false)
       setSubmitted(true)

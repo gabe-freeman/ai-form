@@ -8,10 +8,10 @@ Custom form with AI-powered review suggestions
    npm install
    ```
 
-2. Configure your OpenAI API key:
+2. Configure your Groq API key:
    ```bash
    cp .env.example .env
-   # Edit .env and set VITE_OPENAI_API_KEY
+   # Edit .env and set GROQ_API_KEY
    ```
 
 3. Start the development server:
@@ -32,12 +32,10 @@ npm run build
 - **Section 3 – Design & Communication Process**: 1–5 star ratings for communication, vision, collaboration, transparency, and timeline
 - **Section 4 – Value & Professionalism**: 1–5 ratings plus NPS (0–10) recommendation score
 - **Section 5 – Optional AI Questions**: Open-ended responses that enrich the AI-generated review
-- **Section 6 – AI Review Generator**: Generates a Google Review draft using OpenAI and links to the Google Review page
+- **Section 6 – AI Review Generator**: Generates a Google Review draft using Groq and links to the Google Review page
 
 ## Environment Variables
 
 | Variable | Description |
 |---|---|
-| `VITE_OPENAI_API_KEY` | Your OpenAI API key |
-
-> **Note:** `VITE_` prefix exposes the variable to the browser bundle. For production use, consider routing AI requests through a backend server to keep the API key private.
+| `GROQ_API_KEY` | Your Groq  API key |
